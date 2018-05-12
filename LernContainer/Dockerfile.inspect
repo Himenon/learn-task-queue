@@ -1,0 +1,4 @@
+FROM ubuntu:xenial-20180412
+
+RUN apt-get update && apt-get install -y htop strace
+CMD ["htop"]

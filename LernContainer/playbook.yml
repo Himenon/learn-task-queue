@@ -1,0 +1,42 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: apt update
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install aufs storage drivers
+      action: shell apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
+
+    - name: Install packages to allow apt to use a repository over HTTPS
+      apt: name={{item}} state=installed
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+
+    - name: Add Docker’s official GPG key
+      action: shell curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+    
+    - name: Set up the stable repository
+      action: shell add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+    - name: Install Docker CE
+      apt: name={{item}} state=present update_cache=yes
+      with_items:
+        - docker-ce
+
+    - name: Show avairable docker-ce package
+      action: shell apt-cache madison docker-ce
+
+    - name: set vagrant user to docker group
+      user:
+        name: vagrant
+        group: docker
+
+    - name: Remove dependencies that are no longer required
+      apt:
+        autoremove: yes
