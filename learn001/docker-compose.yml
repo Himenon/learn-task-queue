@@ -1,0 +1,22 @@
+version: '2.1'
+
+services:
+  broker:
+    image: redis:3.0-alpine
+    ports:
+      - 6379:6379
+
+  worker:
+    build:
+      context: .
+    environment:
+      REDIS_HOST: 'broker'
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      PYTHONUNBUFFERED: 0
+    volumes:
+      - ./worker.py:/code/worker.py
+    depends_on:
+      - broker
+    links:
+      - broker
