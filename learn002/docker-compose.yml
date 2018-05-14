@@ -1,0 +1,16 @@
+version: '2.2'
+
+services:
+  worker:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./code:/code
+  inspector:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.inspect
+    pid: 'service:worker'
+    depends_on:
+      - worker
