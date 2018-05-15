@@ -29,6 +29,11 @@
       with_items:
         - docker-ce
 
+    - name: Install Useful Debug Package
+      apt: name={{item}} state=present update_cache=yes
+      with_items:
+        - htop
+
     - name: Show avairable docker-ce package
       action: shell apt-cache madison docker-ce
 
