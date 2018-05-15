@@ -23,7 +23,7 @@ def dryer(dish_queue_):
 
 dish_queue = queue.Queue()
 for n in range(4):
-    dryer_thread = threading.Thread(target=dryer, args=(dish_queue,))
+    dryer_thread = threading.Thread(target=dryer, args=(dish_queue, ))
     dryer_thread.start()
     print("スレッド増えたお")
 

@@ -2,6 +2,7 @@ import multiprocessing as mp
 from time import sleep
 import os
 
+
 def info(title):
     template = """
     {title}
@@ -9,13 +10,10 @@ def info(title):
     | parent process: {ppid}
     | process id: {pid}
     """
-    print(template.format(
-        title=title,
-        name=__name__, 
-        ppid=os.getppid(), 
-        pid=os.getpid()
-      )
-    )
+    print(
+        template.format(
+            title=title, name=__name__, ppid=os.getppid(), pid=os.getpid()))
+
 
 def washer(dishes, output):
     for dish in dishes:
@@ -35,11 +33,11 @@ def dryer(_input):
 
 
 my_queue = mp.JoinableQueue()
-proc = mp.Process(target=dryer, args=(my_queue,))
+proc = mp.Process(target=dryer, args=(my_queue, ))
 proc.daemon = True
 proc.start()
 
 dishes = ["salad", "bread", "entree", "dessert"]
 
 washer(dishes, my_queue)
-my_queue.join() # Queueの中身を取り出すまでブロック中
+my_queue.join()  # Queueの中身を取り出すまでブロック中
