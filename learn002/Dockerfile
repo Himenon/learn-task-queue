@@ -1,7 +1,9 @@
 FROM python:3.6
 
-RUN mkdir /code
-WORKDIR /code
-COPY ./code /code
+RUN pip install redis
 
-CMD ["python", "/code/main.py"]
+RUN mkdir -p /code
+WORKDIR /code
+
+COPY ./worker.py /code
+CMD ["python", "/code/worker.py"]

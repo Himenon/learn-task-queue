@@ -1,11 +1,16 @@
 .PHONY: up
 up:
 	docker-compose up -d
+	docker-compose logs -f
 
-.PHONY: htop
-htop:
-	docker-compose run inspector
+.PHONY: down
+down:
+	docker-compose down
 
-.PHONY: conn
-conn:
-	docker exec -it $(shell docker ps --filter name=learn002_worker -q) bash
+.PHONY: build
+build:
+	docker-compose build
+
+.PHONY: debug
+debug:
+	docker-compose logs -f worker
