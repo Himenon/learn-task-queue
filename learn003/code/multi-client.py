@@ -1,3 +1,4 @@
+import threading
 import requests
 from retrying import retry
 from datetime import datetime as dt
@@ -32,4 +33,6 @@ def my_request(number):
 
 
 if __name__ == '__main__':
-    my_request(256)
+    for i in range(50):
+        t = threading.Thread(target=my_request, args=(i, ))
+        t.start()

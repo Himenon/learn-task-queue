@@ -1,0 +1,44 @@
+@startuml
+
+activate Client
+Client -> WebServer : Request タスクの登録
+note right : POST /task?number=***
+
+activate WebServer
+activate Broker
+WebServer -> Broker : Queueの登録
+Broker -> WebServer : Response
+deactivate Broker
+WebServer -> Client : Response 200
+deactivate WebServer
+deactivate Client
+
+
+loop 逐次実行
+    activate Worker
+    activate Broker
+    Worker -> Broker    : Queueの問い合わせ
+    Broker -> Worker    : Response
+    deactivate Broker
+    Worker -> Worker    : タスクの実行
+    Worker -> Store     : 結果の保存
+    Store -> Worker     : Respons
+    deactivate Worker
+end
+
+loop Polling Request
+    activate Client
+    Client -> WebServer : 実行結果の問い合わせ
+    note right          : GET /result?result_id=***
+    activate WebServer
+    activate Store
+    WebServer -> Store  : Request Result
+    Store -> WebServer  : Response Result
+    deactivate Store
+    WebServer -> Client : Response Result
+    deactivate WebServer
+    deactivate Client
+end
+
+
+@enduml

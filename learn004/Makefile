@@ -11,13 +11,9 @@ up:
 down:
 	docker-compose down
 
-.PHONY: register-task
-register-task:
-	curl http://localhost:5000/task?task_id=1
-
-.PHONY: redis-cli
-redis-cli:
-	redis-cli -p 6379 -n 1
+.PHONY: client
+client:
+	docker-compose run client bash
 
 .PYONY: scale-up
 scale-up:

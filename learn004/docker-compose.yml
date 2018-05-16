@@ -1,0 +1,41 @@
+version: '2.2'
+
+services:
+  client:
+    build:
+      context: .
+    volumes:
+      - ./code:/code
+    environment:
+      REDIS_HOST: 'broker'
+      REDIS_PORT: 6379
+      REDIS_DB: 2
+      REDIS_SUBSCRIBE_CHANNEL: my-channel
+      PYTHONUNBUFFERED: 0
+    command: ['python', '/code/client.py']
+    depends_on:
+      - broker
+    links:
+      - broker
+
+  broker:
+    image: redis:3.0-alpine
+    ports:
+      - 6379:6379
+
+  worker:
+    build:
+      context: .
+    volumes:
+      - ./code:/code
+    environment:
+      REDIS_HOST: 'broker'
+      REDIS_PORT: 6379
+      REDIS_DB: 2
+      REDIS_SUBSCRIBE_CHANNEL: my-channel
+      PYTHONUNBUFFERED: 0
+    command: ['python', '/code/worker.py']
+    depends_on:
+      - broker
+    links:
+      - broker
